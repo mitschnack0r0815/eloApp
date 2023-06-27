@@ -32,33 +32,97 @@ block content
           input(type='hidden' name='_id' value=`${task._id}`)
           button(class='btn btn-danger btn-sm mx-1') Delete
 
-  h5(class='my-2') Completed tasks
-  div(class='row mb-3 border-bottom border-3')
-    div(class='col-sm-8 fw-bold') Task
-    div(class='col-sm-2 fw-bold') Created
-    div(class='col-sm-2 fw-bold') Completed
-  each task in completedTasks
-    div(class='row mb-3')
-      div(class='col-sm-8') #{task.taskName}
-      div(class='col-sm-2') #{format(task.createDate, "yyyy-MM-dd")}
-      div(class='col-sm-2') #{format(task.completedDate, "yyyy-MM-dd")}
+  //- h5(class='my-2') Completed tasks
+  //- div(class='row mb-3 border-bottom border-3')
+  //-   div(class='col-sm-8 fw-bold') Task
+  //-   div(class='col-sm-2 fw-bold') Created
+  //-   div(class='col-sm-2 fw-bold') Completed
+  //- each task in completedTasks
+  //-   div(class='row mb-3')
+  //-     div(class='col-sm-8') #{task.taskName}
+  //-     div(class='col-sm-2') #{format(task.createDate, "yyyy-MM-dd")}
+  //-     div(class='col-sm-2') #{format(task.completedDate, "yyyy-MM-dd")}
+
+  // ------------------------------------------------------------------------------------------------
 
   br 
   hr
   br
 
+block do_game 
+
+  div(class='row my-3')
+    // Button trigger modal
+    button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#exampleModal')
+        | <b> Create Elo Game </b>
+    // Modal
+    #exampleModal.modal.fade(tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true')
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5#exampleModalLabel.modal-title Create Elo Game
+                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                .modal-body
+                  div(class='row mb-3 border-bottom border-3')
+                    div(class='col-md-4 fw-bold') Player
+                    div(class='col-md-2 fw-bold') Win
+                    div(class='col-md-6 fw-bold') Change
+
+                  form(action="/submit-form" method="POST")
+                  div(class='row mb-2')
+                    div(class='col-sm-4')
+                          select#dropdown1(name="dropdown1")
+                            each player in availablePlayer
+                              option(value=player.playerName) #{player.playerName}
+                    div(class='col-sm-2')
+                      input(type='radio', id='option1', name='option', value='option1')
+                    div(class='col-sm-6')
+                      //
+                  div(class='row mb-2')
+                    div(class='col-sm-4')
+                      select#dropdown2(name="dropdown2")
+                            each player in availablePlayer
+                              option(value=player.playerName) #{player.playerName}
+                    div(class='col-sm-2')
+                      input(type='radio', id='option2', name='option', value='option2')
+                    div(class='col-sm-6')
+                      //
+                      
+                .modal-footer
+                      button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
+                      button.btn.btn-primary(type='submit') Save game
+
 block elo_table
+  hr
 
-    h5(class='my-2') Elo table
+  h5(class='my-2') Current Elo 
 
-    div(class='row mb-3 border-bottom border-3')
-        div(class='col-md-4 fw-bold') Player
-        div(class='col-md-2 fw-bold') Elo
+  div(class='row mb-3 border-bottom border-3')
+    div(class='col-md-6 fw-bold') Player
+    div(class='col-md-4 fw-bold') Elo
+
+  each player in availablePlayer 
+    div(class='row mb-2')
+      div(class='col-sm-6') #{player.playerName}
+      div(class='col-sm-4') #{player.elo}
+
+  hr
+
+  form(action='./addPlayer' method='POST' class='form-registration')
+    div(class='row my-3')
+        div(class='col-md-4')
+          label(for="playerName" class='fs-5') New player
+        div(class='col-md-6')
+          input(class="form-control form-control-sm" type="text" name='playerName', placeholder="Enter Player name here" )
+        div(class='col-md-2 text-end')
+          button(class='btn btn-success btn-sm' type='submit') Add player
 
 block games_table
 
-    h5(class='my-2') Elo table
+  h5(class='my-2') Games 
 
-    div(class='row mb-3 border-bottom border-3')
-        div(class='col-md-4 fw-bold') Player
-        div(class='col-md-2 fw-bold') Elo
+  div(class='row mb-3 border-bottom border-3')
+    div(class='col-md-2 fw-bold') Player 1
+    div(class='col-md-2 fw-bold') Player 2
+    div(class='col-md-4 fw-bold') Elo exchange 
+    div(class='col-md-4 fw-bold') Comment
