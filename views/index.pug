@@ -114,7 +114,7 @@ block elo_table
   each player in availablePlayer 
     div(class='row mb-2')
       div(class='col-sm-6') #{player.playerName}
-      div(id=player.playerName + '_elo' class='col-sm-4') #{player.elo}
+      div(id=player.playerName + '_elo' class='col-sm-4') #{Math.round(player.elo)}
 
   hr
 

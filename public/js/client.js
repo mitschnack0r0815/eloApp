@@ -29,8 +29,8 @@ function gameSetup()
 
                 const [newRating1, newRating2] = calculateElo(player1Rating, player2Rating, result);
 
-                document.getElementById('player1Change').value = newRating1;
-                document.getElementById('player2Change').value = newRating2;
+                document.getElementById('player1Change').value = Math.round(newRating1);
+                document.getElementById('player2Change').value = Math.round(newRating2);
 
                 console.log(`Player A's new rating: ${newRating1}`);
                 console.log(`Player B's new rating: ${newRating2}`);
