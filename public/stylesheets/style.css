@@ -6,3 +6,11 @@ body {
 a {
   color: #00B7FF;
 }
+
+.text-azure-blue {
+  color: #0078D4
+}
+
+.bg-azure-light-gray {
+  background-color: #EBEBEB;
+}
