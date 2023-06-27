@@ -2,35 +2,35 @@ extends layout
 
 block content
 
-  form(action='./addTask' method='POST' class='form-registration')
-    div(class='row my-3')
-        div(class='col-md-2 align-bottom')
-          label(for="taskName" class='fs-5') New task
-        div(class='col-md-8')
-          input(class="form-control form-control-sm" type="text" name='taskName', placeholder="Enter new task here" )
-        div(class='col-md-2 text-end')
-          button(class='btn btn-success btn-sm' type='submit') Add task
+  //- form(action='./addTask' method='POST' class='form-registration')
+  //-   div(class='row my-3')
+  //-       div(class='col-md-2 align-bottom')
+  //-         label(for="taskName" class='fs-5') New task
+  //-       div(class='col-md-8')
+  //-         input(class="form-control form-control-sm" type="text" name='taskName', placeholder="Enter new task here" )
+  //-       div(class='col-md-2 text-end')
+  //-         button(class='btn btn-success btn-sm' type='submit') Add task
 
 
-  h5(class='my-2') Current tasks
+  //- h5(class='my-2') Current tasks
 
-  div(class='row mb-3 border-bottom border-3')
-    div(class='col-md-6 fw-bold') Task
-    div(class='col-md-2 fw-bold') Created
-    div(class='col-md-4 fw-bold') Action
+  //- div(class='row mb-3 border-bottom border-3')
+  //-   div(class='col-md-6 fw-bold') Task
+  //-   div(class='col-md-2 fw-bold') Created
+  //-   div(class='col-md-4 fw-bold') Action
 
-  each task in currentTasks
-    div(class='row mb-2')
-      div(class='col-sm-6') #{task.taskName}
-      div(class='col-sm-2') #{format(task.createDate, "yyyy-MM-dd")}
-      div(class='col-sm-2')
-        form(action='./completeTask' method='POST' class='form-registration')
-          input(type='hidden' name='_id' value=`${task._id}`)
-          button(class='btn btn-primary btn-sm mx-1' type='submit') Complete
-      div(class='col-sm-2')
-        form(action='./deleteTask' method='POST' class='form-registration')
-          input(type='hidden' name='_id' value=`${task._id}`)
-          button(class='btn btn-danger btn-sm mx-1') Delete
+  //- each task in currentTasks
+  //-   div(class='row mb-2')
+  //-     div(class='col-sm-6') #{task.taskName}
+  //-     div(class='col-sm-2') #{format(task.createDate, "yyyy-MM-dd")}
+  //-     div(class='col-sm-2')
+  //-       form(action='./completeTask' method='POST' class='form-registration')
+  //-         input(type='hidden' name='_id' value=`${task._id}`)
+  //-         button(class='btn btn-primary btn-sm mx-1' type='submit') Complete
+  //-     div(class='col-sm-2')
+  //-       form(action='./deleteTask' method='POST' class='form-registration')
+  //-         input(type='hidden' name='_id' value=`${task._id}`)
+  //-         button(class='btn btn-danger btn-sm mx-1') Delete
 
   //- h5(class='my-2') Completed tasks
   //- div(class='row mb-3 border-bottom border-3')
@@ -64,33 +64,43 @@ block do_game
                     button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
                 .modal-body
                   div(class='row mb-3 border-bottom border-3')
-                    div(class='col-md-4 fw-bold') Player
+                    div(class='col-md-3 fw-bold') Player
+                    div(class='col-md-2 fw-bold') Elo
                     div(class='col-md-2 fw-bold') Win
-                    div(class='col-md-6 fw-bold') Change
+                    div(class='col-md-2 fw-bold') Change
 
                   form(action="/addGame" method="POST" class='form-registration')
                     div(class='row mb-2')
-                      div(class='col-sm-4')
-                        select#dropdown1(name="dropdown1")
+                      div(class='col-sm-3')
+                        select#playerDropdown1(name="playerDropdown1")
+                          option(value='-') #{'-'}
                           each player in availablePlayer
                             option(value=player.playerName) #{player.playerName}
+                      div#playerDropdown1Elo(class='col-sm-2')
                       div(class='col-sm-2')
-                        input(type='radio', id='option1', name='option', value='1')
-                      div(class='col-sm-6')
+                        input(type='radio', id='option1', name='checkPlayerWin', value='1')
+                      div(class='col-sm-2')
+                        input(id='player1Change' name='player1Change' type="text" value='0')
                         //
                     div(class='row mb-2')
-                      div(class='col-sm-4')
-                        select#dropdown2(name="dropdown2")
+                      div(class='col-sm-3')
+                        select#playerDropdown2(name="playerDropdown2")
+                          option(value='-') #{'-'}
                           each player in availablePlayer
                             option(value=player.playerName) #{player.playerName}
+                      div#playerDropdown2Elo(class='col-sm-2')
                       div(class='col-sm-2')
-                        input(type='radio', id='option2', name='option', value='2')
-                      div(class='col-sm-6')
+                        input(type='radio', id='option2', name='checkPlayerWin', value='2')
+                      div(class='col-sm-2')
+                        input(id='player2Change' name='player2Change' type="text" value='0')
                         //
                     button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
                     button.btn.btn-primary(type='submit') Save game
 
                 .modal-footer
+
+  script.
+    gameSetup();
 
 block elo_table
   hr
@@ -104,7 +114,7 @@ block elo_table
   each player in availablePlayer 
     div(class='row mb-2')
       div(class='col-sm-6') #{player.playerName}
-      div(class='col-sm-4') #{player.elo}
+      div(id=player.playerName + '_elo' class='col-sm-4') #{player.elo}
 
   hr
 
@@ -122,7 +132,14 @@ block games_table
   h5(class='my-2') Games 
 
   div(class='row mb-3 border-bottom border-3')
-    div(class='col-md-2 fw-bold') Player 1
-    div(class='col-md-2 fw-bold') Player 2
-    div(class='col-md-4 fw-bold') Elo exchange 
+    div(class='col-md-3 fw-bold') Player 1
+    div(class='col-md-3 fw-bold') Player 2
+    div(class='col-md-2 fw-bold') Winner 
     div(class='col-md-4 fw-bold') Comment
+
+  each game in playedGames 
+    div(class='row mb-2')
+      div(class='col-sm-3') #{game.player1}
+      div(class='col-sm-3') #{game.player2}
+      div(class='col-sm-2') #{game.winner}
+      //div(class='col-sm-6') #{game.winner}

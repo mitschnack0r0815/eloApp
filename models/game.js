@@ -6,7 +6,7 @@ const gameSchema = new mongoose.Schema({
   player2:  String,
   p1Elo:    Number,
   p2Elo:    Number,
-  winner:   Number
+  winner:   String
 });
 
 module.exports = mongoose.model('Game', gameSchema);
