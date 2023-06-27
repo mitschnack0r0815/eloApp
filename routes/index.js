@@ -79,9 +79,11 @@ router.post('/addPlayer', async (req, res) => {
   try {
     const playerExists = await Player.find({ playerName: playerName });
 
-    if (playerExists) 
+    console.log(playerExists.length);
+
+    if (playerExists.length >= 1) 
     {
-      console.log(err);
+      //console.log(err);
       /* TODO: player exists handle */
       res.send('Sorry! Player exists...');
     } else {
