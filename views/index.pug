@@ -68,29 +68,29 @@ block do_game
                     div(class='col-md-2 fw-bold') Win
                     div(class='col-md-6 fw-bold') Change
 
-                  form(action="/submit-form" method="POST")
-                  div(class='row mb-2')
-                    div(class='col-sm-4')
-                          select#dropdown1(name="dropdown1")
-                            each player in availablePlayer
-                              option(value=player.playerName) #{player.playerName}
-                    div(class='col-sm-2')
-                      input(type='radio', id='option1', name='option', value='option1')
-                    div(class='col-sm-6')
-                      //
-                  div(class='row mb-2')
-                    div(class='col-sm-4')
-                      select#dropdown2(name="dropdown2")
-                            each player in availablePlayer
-                              option(value=player.playerName) #{player.playerName}
-                    div(class='col-sm-2')
-                      input(type='radio', id='option2', name='option', value='option2')
-                    div(class='col-sm-6')
-                      //
-                      
+                  form(action="/addGame" method="POST" class='form-registration')
+                    div(class='row mb-2')
+                      div(class='col-sm-4')
+                        select#dropdown1(name="dropdown1")
+                          each player in availablePlayer
+                            option(value=player.playerName) #{player.playerName}
+                      div(class='col-sm-2')
+                        input(type='radio', id='option1', name='option', value='1')
+                      div(class='col-sm-6')
+                        //
+                    div(class='row mb-2')
+                      div(class='col-sm-4')
+                        select#dropdown2(name="dropdown2")
+                          each player in availablePlayer
+                            option(value=player.playerName) #{player.playerName}
+                      div(class='col-sm-2')
+                        input(type='radio', id='option2', name='option', value='2')
+                      div(class='col-sm-6')
+                        //
+                    button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
+                    button.btn.btn-primary(type='submit') Save game
+
                 .modal-footer
-                      button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
-                      button.btn.btn-primary(type='submit') Save game
 
 block elo_table
   hr
