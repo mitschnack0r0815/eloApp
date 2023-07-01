@@ -17,14 +17,19 @@ block do_game
               .modal-content.modal-size
                   .modal-header
                       h5#exampleModalLabel.modal-title <b>Create Elo Game</b>
+                      
                       button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close' onclick="reloadPage()")
                   .modal-body
+                    p 1. Choose <b>all</b> the players 
+                    p 2. Drag and drop the placings
+                    p 3. Comment the games e.g. fifa, poker, ...
+                    p 4. Save the game.
+                    br
                     div(class='row mb-3 border-bottom border-3')
                       div(class='col-md-1 fw-bold') #
                       div(class='col-md-3 fw-bold') Player
                       div(class='col-md-2 fw-bold') Elo
                       div(class='col-md-2 fw-bold') Change
-                      br
                       br
                     form(id='gameForm' action="/addGame" method="POST" class='form-registration')
                       div(id='playerRows' class='row mb-0')
