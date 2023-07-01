@@ -1,6 +1,11 @@
+head {
+  padding: 50px;
+  font: 24px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 24px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
@@ -13,4 +18,12 @@ a {
 
 .bg-azure-light-gray {
   background-color: #EBEBEB;
+}
+
+.container-full-width {
+  padding-right: 0;
+  padding-left: 0;
+  margin-right: auto;
+  margin-left: auto;
+  width: 100%;
 }

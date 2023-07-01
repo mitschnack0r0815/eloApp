@@ -4,15 +4,17 @@ html
     title= title
     link(rel='stylesheet', href='/css/bootstrap.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
+    
+    script(src="https://cdn.jsdelivr.net/npm/sortablejs@1.13.0/Sortable.min.js")
     script(src='/js/client.js')
     
   body(class='p-2')
 
-    main(class='container' style='max-width: 720px')
+    main(class='container-full-width' style='max-width: 720px')
         div(class='d-flex align-items-center p-3 my-1 bg-azure-light-gray rounded shadow-sm')
             img(class='me-3', src='/images/htph.jpg', alt='', width='48', height='48')
             div(class='1h-1')
-                h1(class='h3 mb-0 text-azure-blue lh-1') Elo Boys (early access)
+                h1(class='h1 mb-0 text-azure-blue lh-1') Elo Boys (early access)
                 small(class='text-black') Lose your friends with the help of this WebApp
 
 

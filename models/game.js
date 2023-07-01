@@ -2,11 +2,10 @@ const mongoose = require('mongoose');
 
 const gameSchema = new mongoose.Schema({
   createDate: Date,
-  player1:  String,
-  player2:  String,
-  p1Elo:    Number,
-  p2Elo:    Number,
-  winner:   String
+  player:  Array,
+  elo:    Array,
+  newElo: Array,
+  comment: String
 });
 
 module.exports = mongoose.model('Game', gameSchema);

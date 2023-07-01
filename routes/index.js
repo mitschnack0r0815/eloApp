@@ -21,6 +21,13 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/models', async (req, res) => {
+  // Retrieve models data from your database or any other source
+  const availablePlayer = await Player.find({ active: true });
+
+  res.json(availablePlayer);
+});
+
 router.post('/addTask', function(req, res, next) {
   const taskName = req.body.taskName;
   const createDate = Date.now();
@@ -118,45 +125,79 @@ router.post('/addPlayer', async (req, res) => {
 
 router.post('/addGame', async (req, res) => {
   const createDate = Date.now();
+  let playerNames = [];
+  let playerElos = [];
+  let playerElosUpdated = [];
+  let comment = 'none';
 
-  console.log(req.body);
+  Object.keys(req.body).forEach((key) => {
+    //console.log(key);
+    if (key.startsWith('playerDropdown')) {
+      var value = req.body[key];
+      // Perform operations with the value
+      console.log('Key: ' + key + ' Value: ' + value);
 
-  const player1 = req.body.playerDropdown1;
-  const player2 = req.body.playerDropdown2;
-  const p1Elo = req.body.player1Change;
-  const p2Elo = req.body.player2Change;
-  const winner = req.body.checkPlayerWin;
+      playerNames.push(value);
+    }
 
-  try {
+    if (key.startsWith('playerChange')) {
+      var value = req.body[key];
+      // Perform operations with the value
+      console.log('Key: ' + key + ' Value: ' + value);
 
+      playerElos.push(value);
+    }
+  });
+
+
+  for (let index = 0; index < playerElos.length; index++) {
     await Player.findOneAndUpdate(
-      { playerName: player1 },
-      { elo: p1Elo },
+      { playerName: playerNames[index] },
+      { $inc: { elo: playerElos[index] } },
       { new: true } // Return the updated document
-    );
-
-    await Player.findOneAndUpdate(
-      { playerName: player2 },
-      { elo: p2Elo },
-      { new: true } // Return the updated document
-    );
-
-    var game = new Game({
-      createDate: createDate,
-      player1:  player1,
-      player2:  player2,
-      p1Elo:    p1Elo,
-      p2Elo:    p2Elo,
-      winner:   winner
+    ).then(updatedItem => {
+      if (updatedItem) {
+        // Access the updated value
+        const updatedElo = Math.round(updatedItem.elo);
+        playerElosUpdated.push(updatedElo);
+      } else {
+        console.log('Item not found');
+      }
+    }).catch(error => {
+      console.error('Error:', error);
     });
-
-    game.save();
-    res.redirect('/');
-
-  } catch (err) {
-    console.log(err);
-    res.send('Sorry! Something went wrong.');
   }
+  console.log(playerNames + ' - ' + playerElos + ' - ' + playerElosUpdated);
+
+  // try {
+
+  //   await Player.findOneAndUpdate(
+  //     { playerName: player1 },
+  //     { elo: p1Elo },
+  //     { new: true } // Return the updated document
+  //   );
+
+  //   await Player.findOneAndUpdate(
+  //     { playerName: player2 },
+  //     { elo: p2Elo },
+  //     { new: true } // Return the updated document
+  //   );
+
+  var game = new Game({
+    createDate: createDate,
+    player:  playerNames,
+    elo:    playerElos,
+    newElo: playerElosUpdated,
+    comment: comment
+  });
+
+  game.save();
+  res.redirect('/');
+
+  // } catch (err) {
+  //   console.log(err);
+  //   res.send('Sorry! Something went wrong.');
+  // }
 });
 
 //---------------------------------------------------------------------

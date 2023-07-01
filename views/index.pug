@@ -51,53 +51,77 @@ block content
 
 block do_game 
 
-  div(class='row my-3')
-    // Button trigger modal
-    button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#exampleModal')
-        | <b> Create Elo Game </b>
-    // Modal
-    #exampleModal.modal.fade(tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true')
-        .modal-dialog
-            .modal-content
-                .modal-header
-                    h5#exampleModalLabel.modal-title Create Elo Game
-                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
-                .modal-body
-                  div(class='row mb-3 border-bottom border-3')
-                    div(class='col-md-3 fw-bold') Player
-                    div(class='col-md-2 fw-bold') Elo
-                    div(class='col-md-2 fw-bold') Win
-                    div(class='col-md-2 fw-bold') Change
+  div(class='row my-3 justify-content-center')
+    div(class='col-sm-4')
+      <div class="input-group">
+        <div class="input-group-text">Player count</div>
+        input#playerCount(class='col-sm-4' type="number" name="playerCount" min="2" max="10" value='2')
+      </div>
+    div(class='col-sm-4')
+      // Button trigger modal
+      button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#exampleModal' onclick="addRows()")
+          | <b> Create Elo Game </b>
+      // Modal
+      #exampleModal.modal.fade(tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true')
+          .modal-dialog
+              .modal-content
+                  .modal-header
+                      h5#exampleModalLabel.modal-title Create Elo Game
+                      button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close' onclick="reloadPage()")
+                  .modal-body
+                    div(class='row mb-3 border-bottom border-3')
+                      div(class='col-md-1 fw-bold') #
+                      div(class='col-md-3 fw-bold') Player
+                      div(class='col-md-2 fw-bold') Elo
+                      div(class='col-md-2 fw-bold') Change
+                    form(id='gameForm' action="/addGame" method="POST" class='form-registration')
+                      div(id='playerRows' class='row mb-0')
+                        input(id='eloInput' name='eloInput' value='0' type="text" hidden) 
+                        .playerCount-container
+                        //- div(class='row mb-2')
+                        //-   div(class='col-sm-3')
+                        //-     select#playerDropdown1(name="playerDropdown1")
+                        //-       option(value='-') #{'-'}
+                        //-       each player in availablePlayer
+                        //-         option(value=player.playerName) #{player.playerName}
+                        //-   div#playerDropdown1Elo(class='col-sm-2')
+                        //-   div(class='col-sm-2')
+                        //-     input(type='radio', id='option1', name='checkPlayerWin', value='1')
+                        //-   div(class='col-sm-5')
+                        //-     input(class='col-sm-12' id='player1Change' name='player1Change' type="text" value='0' readonly)
+                        //-     //
+                        //- div(class='row mb-2')
+                        //-   div(class='col-sm-3')
+                        //-     select#playerDropdown2(name="playerDropdown2")
+                        //-       option(value='-') #{'-'}
+                        //-       each player in availablePlayer
+                        //-         option(value=player.playerName) #{player.playerName}
+                        //-   div#playerDropdown2Elo(class='col-sm-2')
+                        //-   div(class='col-sm-2')
+                        //-     input(type='radio', id='option2', name='checkPlayerWin', value='2')
+                        //-   div(class='col-sm-5')
+                        //-     input(class='col-sm-12' id='player2Change' name='player2Change' type="text" value='0' readonly)
+                        //-     //
+                        //-   - for (let i = 1; i <= nPlayerCount; i++)
+                        //-     div(class='col-sm-3')
+                        //-       select(id=`playerDropdown${i}` name=`playerDropdown${i}`)
+                        //-         option(value='-') #{'-'}
+                        //-         each player in availablePlayer
+                        //-           option(value=player.playerName) #{player.playerName}
+                        //-     div(id=`playerDropdown${i}Elo` class='col-sm-2')
+                        //-     //- div(class='col-sm-2')
+                        //-     //-   input(type='radio', id='option2', name='checkPlayerWin', value='2')
+                        //-     div(class='col-sm-5')
+                        //-       input(class='col-sm-12' id=`player${i}Change` name=`player${i}Change` type="text" value='0' readonly)
+                      div(class='row mb-2')
+                        div(class='col-sm-2')
+                        div(class='col-sm-4')
+                        div(class='col-sm-2')
+                          button.btn.btn-secondary(type='button' data-bs-dismiss='modal' onclick="reloadPage()") Close
+                        div(class='col-sm-4')
+                          button.btn.btn-primary(type='submit') Save game
 
-                  form(action="/addGame" method="POST" class='form-registration')
-                    div(class='row mb-2')
-                      div(class='col-sm-3')
-                        select#playerDropdown1(name="playerDropdown1")
-                          option(value='-') #{'-'}
-                          each player in availablePlayer
-                            option(value=player.playerName) #{player.playerName}
-                      div#playerDropdown1Elo(class='col-sm-2')
-                      div(class='col-sm-2')
-                        input(type='radio', id='option1', name='checkPlayerWin', value='1')
-                      div(class='col-sm-2')
-                        input(id='player1Change' name='player1Change' type="text" value='0')
-                        //
-                    div(class='row mb-2')
-                      div(class='col-sm-3')
-                        select#playerDropdown2(name="playerDropdown2")
-                          option(value='-') #{'-'}
-                          each player in availablePlayer
-                            option(value=player.playerName) #{player.playerName}
-                      div#playerDropdown2Elo(class='col-sm-2')
-                      div(class='col-sm-2')
-                        input(type='radio', id='option2', name='checkPlayerWin', value='2')
-                      div(class='col-sm-2')
-                        input(id='player2Change' name='player2Change' type="text" value='0')
-                        //
-                    button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
-                    button.btn.btn-primary(type='submit') Save game
-
-                .modal-footer
+                  .modal-footer
 
   script.
     gameSetup();
@@ -143,3 +167,4 @@ block games_table
       div(class='col-sm-3') #{game.player2}
       div(class='col-sm-2') #{game.winner}
       //div(class='col-sm-6') #{game.winner}
+      
