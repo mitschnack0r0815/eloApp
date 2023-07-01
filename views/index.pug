@@ -1,72 +1,22 @@
 extends layout
 
-block content
-
-  //- form(action='./addTask' method='POST' class='form-registration')
-  //-   div(class='row my-3')
-  //-       div(class='col-md-2 align-bottom')
-  //-         label(for="taskName" class='fs-5') New task
-  //-       div(class='col-md-8')
-  //-         input(class="form-control form-control-sm" type="text" name='taskName', placeholder="Enter new task here" )
-  //-       div(class='col-md-2 text-end')
-  //-         button(class='btn btn-success btn-sm' type='submit') Add task
-
-
-  //- h5(class='my-2') Current tasks
-
-  //- div(class='row mb-3 border-bottom border-3')
-  //-   div(class='col-md-6 fw-bold') Task
-  //-   div(class='col-md-2 fw-bold') Created
-  //-   div(class='col-md-4 fw-bold') Action
-
-  //- each task in currentTasks
-  //-   div(class='row mb-2')
-  //-     div(class='col-sm-6') #{task.taskName}
-  //-     div(class='col-sm-2') #{format(task.createDate, "yyyy-MM-dd")}
-  //-     div(class='col-sm-2')
-  //-       form(action='./completeTask' method='POST' class='form-registration')
-  //-         input(type='hidden' name='_id' value=`${task._id}`)
-  //-         button(class='btn btn-primary btn-sm mx-1' type='submit') Complete
-  //-     div(class='col-sm-2')
-  //-       form(action='./deleteTask' method='POST' class='form-registration')
-  //-         input(type='hidden' name='_id' value=`${task._id}`)
-  //-         button(class='btn btn-danger btn-sm mx-1') Delete
-
-  //- h5(class='my-2') Completed tasks
-  //- div(class='row mb-3 border-bottom border-3')
-  //-   div(class='col-sm-8 fw-bold') Task
-  //-   div(class='col-sm-2 fw-bold') Created
-  //-   div(class='col-sm-2 fw-bold') Completed
-  //- each task in completedTasks
-  //-   div(class='row mb-3')
-  //-     div(class='col-sm-8') #{task.taskName}
-  //-     div(class='col-sm-2') #{format(task.createDate, "yyyy-MM-dd")}
-  //-     div(class='col-sm-2') #{format(task.completedDate, "yyyy-MM-dd")}
-
-  // ------------------------------------------------------------------------------------------------
-
-  br 
-  hr
-  br
-
 block do_game 
 
   div(class='row my-3 justify-content-center')
-    div(class='col-sm-4')
-      <div class="input-group">
-        <div class="input-group-text">Player count</div>
-        input#playerCount(class='col-sm-4' type="number" name="playerCount" min="2" max="10" value='2')
+      <div class="input-group addGame">
+        <div class="input-group-text col-sm-4"><b>Set player count</b></div>
+        input#playerCount( type="number" name="playerCount" min="2" max="10" value='2' class='col-sm-2 centered-input')
+        // Button trigger modal
+        button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#exampleModal' onclick="addRows()" class='col-sm-6')
+            | <b> Create Elo Game </b>
       </div>
-    div(class='col-sm-4')
-      // Button trigger modal
-      button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#exampleModal' onclick="addRows()")
-          | <b> Create Elo Game </b>
+      
       // Modal
       #exampleModal.modal.fade(tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true')
-          .modal-dialog
-              .modal-content
+          .modal-dialog.modal-fullscreen
+              .modal-content.modal-size
                   .modal-header
-                      h5#exampleModalLabel.modal-title Create Elo Game
+                      h5#exampleModalLabel.modal-title <b>Create Elo Game</b>
                       button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close' onclick="reloadPage()")
                   .modal-body
                     div(class='row mb-3 border-bottom border-3')
@@ -74,48 +24,16 @@ block do_game
                       div(class='col-md-3 fw-bold') Player
                       div(class='col-md-2 fw-bold') Elo
                       div(class='col-md-2 fw-bold') Change
+                      br
+                      br
                     form(id='gameForm' action="/addGame" method="POST" class='form-registration')
                       div(id='playerRows' class='row mb-0')
-                        input(id='eloInput' name='eloInput' value='0' type="text" hidden) 
+                        input(id='eloInput' name='eloInput' value='0' type="text" hidden)
                         .playerCount-container
-                        //- div(class='row mb-2')
-                        //-   div(class='col-sm-3')
-                        //-     select#playerDropdown1(name="playerDropdown1")
-                        //-       option(value='-') #{'-'}
-                        //-       each player in availablePlayer
-                        //-         option(value=player.playerName) #{player.playerName}
-                        //-   div#playerDropdown1Elo(class='col-sm-2')
-                        //-   div(class='col-sm-2')
-                        //-     input(type='radio', id='option1', name='checkPlayerWin', value='1')
-                        //-   div(class='col-sm-5')
-                        //-     input(class='col-sm-12' id='player1Change' name='player1Change' type="text" value='0' readonly)
-                        //-     //
-                        //- div(class='row mb-2')
-                        //-   div(class='col-sm-3')
-                        //-     select#playerDropdown2(name="playerDropdown2")
-                        //-       option(value='-') #{'-'}
-                        //-       each player in availablePlayer
-                        //-         option(value=player.playerName) #{player.playerName}
-                        //-   div#playerDropdown2Elo(class='col-sm-2')
-                        //-   div(class='col-sm-2')
-                        //-     input(type='radio', id='option2', name='checkPlayerWin', value='2')
-                        //-   div(class='col-sm-5')
-                        //-     input(class='col-sm-12' id='player2Change' name='player2Change' type="text" value='0' readonly)
-                        //-     //
-                        //-   - for (let i = 1; i <= nPlayerCount; i++)
-                        //-     div(class='col-sm-3')
-                        //-       select(id=`playerDropdown${i}` name=`playerDropdown${i}`)
-                        //-         option(value='-') #{'-'}
-                        //-         each player in availablePlayer
-                        //-           option(value=player.playerName) #{player.playerName}
-                        //-     div(id=`playerDropdown${i}Elo` class='col-sm-2')
-                        //-     //- div(class='col-sm-2')
-                        //-     //-   input(type='radio', id='option2', name='checkPlayerWin', value='2')
-                        //-     div(class='col-sm-5')
-                        //-       input(class='col-sm-12' id=`player${i}Change` name=`player${i}Change` type="text" value='0' readonly)
-                      div(class='row mb-2')
-                        div(class='col-sm-2')
-                        div(class='col-sm-4')
+                      hr
+                      div(class='row mb-2 justify-content-center')
+                        div(class='col-sm-1')
+                        input(class='col-sm-5' name='comment' type='text' placeholder='Comment here...')
                         div(class='col-sm-2')
                           button.btn.btn-secondary(type='button' data-bs-dismiss='modal' onclick="reloadPage()") Close
                         div(class='col-sm-4')
@@ -127,44 +45,81 @@ block do_game
     gameSetup();
 
 block elo_table
-  hr
+  br
 
-  h5(class='my-2') Current Elo 
+  h2(class='my-2') <b>Current Elo </b>
+  div.card
+    div.card-body
+      each player in availablePlayer 
+        div(class='row mb-2' hidden)
+          div(class='col-sm-6') #{player.playerName}
+          div(id=player.playerName + '_elo' class='col-sm-4') #{Math.round(player.elo)}
 
-  div(class='row mb-3 border-bottom border-3')
-    div(class='col-md-6 fw-bold') Player
-    div(class='col-md-4 fw-bold') Elo
+      table#eloTable
+        thead
+          tr
+            th #
+            th Player
+            th Elo
+        tbody
+          each player, i in availablePlayer
+            tr
+              td #{i +1}.
+              td= player.playerName
+              td #{Math.round(player.elo)}
+        script.
+          $(document).ready(function() {
+            $('#eloTable').DataTable({
+              paging: false,
+              language: {
+                info: ''
+              }
+            });
+          });
 
-  each player in availablePlayer 
-    div(class='row mb-2')
-      div(class='col-sm-6') #{player.playerName}
-      div(id=player.playerName + '_elo' class='col-sm-4') #{Math.round(player.elo)}
+  br
 
-  hr
-
-  form(action='./addPlayer' method='POST' class='form-registration')
-    div(class='row my-3')
-        div(class='col-md-4')
-          label(for="playerName" class='fs-5') New player
-        div(class='col-md-6')
-          input(class="form-control form-control-sm" type="text" name='playerName', placeholder="Enter Player name here" )
-        div(class='col-md-2 text-end')
-          button(class='btn btn-success btn-sm' type='submit') Add player
+  div.card
+    div.card-body
+        form(action='./addPlayer' method='POST' class='form-registration')
+          div(class='row my-3')
+              div(class='col-sm-9')
+                input(class="form-control form-control-sm addGame" type="text" name='playerName', placeholder="Enter player name here..." )
+              div(class='col-sm-3 addGame')
+                button(class='btn btn-primary btn-sm' type='submit') Add player
 
 block games_table
 
-  h5(class='my-2') Games 
+  br
+  br
 
-  div(class='row mb-3 border-bottom border-3')
-    div(class='col-md-3 fw-bold') Player 1
-    div(class='col-md-3 fw-bold') Player 2
-    div(class='col-md-2 fw-bold') Winner 
-    div(class='col-md-4 fw-bold') Comment
+  h2(class='my-2') <b>Games</b>
 
-  each game in playedGames 
-    div(class='row mb-2')
-      div(class='col-sm-3') #{game.player1}
-      div(class='col-sm-3') #{game.player2}
-      div(class='col-sm-2') #{game.winner}
-      //div(class='col-sm-6') #{game.winner}
-      
+  each game in playedGames.reverse()
+    div.card
+      div.card-body
+        div(class='row mb-2')
+          div(class='col-sm-12')
+            //h5.card-title Table Card
+            div.table
+              table.table
+                thead
+                  tr
+                    th(style='width: 20px;')
+                    th Player
+                    th Elo
+                tbody
+                  each player, i in game.player
+                    tr
+                      td ##{i +1}
+                      td #{player}
+                      td 
+                        div(class='row')
+                          div(class='col-sm-6') #{Number(game.newElo[i]) - Number(game.elo[i])} &rarr; #{game.newElo[i]} 
+                          - const elo = Number(game.elo[i])
+                          div(class=(elo >= 0) ? 'green col-sm-4' : 'red col-sm-4') 
+                            | (#{elo})
+          div(class='col-sm-12')    
+            div.comment-box 
+              | <b>Comment:</b> <br> #{game.comment}
+    br

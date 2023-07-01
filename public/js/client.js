@@ -122,7 +122,7 @@ async function addRows()
 
     for (var i = 1; i <= iterations; i++) {
         var formPlayer = document.createElement('div');
-        formPlayer.className = 'row mb-0 sortable-row';
+        formPlayer.className = 'row mb-0 sortable-row drag-me';
         formPlayer.setAttribute('data-id', i );
 
         var row = document.createElement('div');

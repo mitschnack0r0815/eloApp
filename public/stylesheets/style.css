@@ -6,6 +6,7 @@ head {
 body {
   padding: 50px;
   font: 24px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #dbf2ff;
 }
 
 a {
@@ -26,4 +27,36 @@ a {
   margin-right: auto;
   margin-left: auto;
   width: 100%;
+}
+
+.green {
+  color: #1a7927;
+}
+
+.red {
+  color: #ac2222;
+}
+
+.addGame {
+  font-size: x-large;
+}
+
+.addGame * {
+  font-size: 100%;
+}
+
+.centered-input {
+  text-align: center;
+}
+
+.card {
+  background-color: rgb(255, 255, 255);
+}
+
+.modal-size * {
+  font-size: 50px;
+}
+
+.drag-me {
+  
 }

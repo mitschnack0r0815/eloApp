@@ -11,10 +11,10 @@ router.get('/', async (req, res) => {
     const availablePlayer = await Player.find({ active: true });
     const playedGames = await Game.find();
 
-    const currentTasks = await Task.find({ completed: null });
+    availablePlayer.sort((a, b) => b.elo - a.elo);
 
     console.log(`Active player: ${availablePlayer.length} Games: ${playedGames.length}`);
-    res.render('index', { currentTasks: currentTasks, availablePlayer: availablePlayer, playedGames: playedGames });
+    res.render('index', { availablePlayer: availablePlayer, playedGames: playedGames });
   } catch (err) {
     console.log(err);
     res.send('Sorry! Something went wrong.');
@@ -26,55 +26,6 @@ router.get('/models', async (req, res) => {
   const availablePlayer = await Player.find({ active: true });
 
   res.json(availablePlayer);
-});
-
-router.post('/addTask', function(req, res, next) {
-  const taskName = req.body.taskName;
-  const createDate = Date.now();
-  
-  var task = new Task({
-    taskName: taskName,
-    createDate: createDate
-  });
-  console.log(`Adding a new task ${taskName} - createDate ${createDate}`)
-
-  task.save()
-      .then(() => { 
-        console.log(`Added new task ${taskName} - createDate ${createDate}`)        
-        res.redirect('/'); })
-      .catch((err) => {
-          console.log(err);
-          res.send('Sorry! Something went wrong.');
-      });
-});
-
-router.post('/completeTask', function(req, res, next) {
-  console.log("I am in the PUT method")
-  const taskId = req.body._id;
-  const completedDate = Date.now();
-
-  Task.findByIdAndUpdate(taskId, { completed: true, completedDate: Date.now()})
-    .then(() => { 
-      console.log(`Completed task ${taskId}`)
-      res.redirect('/'); }  )
-    .catch((err) => {
-      console.log(err);
-      res.send('Sorry! Something went wrong.');
-    });
-});
-
-
-router.post('/deleteTask', function(req, res, next) {
-  const taskId = req.body._id;
-  const completedDate = Date.now();
-  Task.findByIdAndDelete(taskId)
-    .then(() => { 
-      console.log(`Deleted task $(taskId)`)      
-      res.redirect('/'); }  )
-    .catch((err) => {
-      console.log(err);
-      res.send('Sorry! Something went wrong.');
-    });
 });
 
 //---------------------------------------------------------------------
@@ -128,7 +79,7 @@ router.post('/addGame', async (req, res) => {
   let playerNames = [];
   let playerElos = [];
   let playerElosUpdated = [];
-  let comment = 'none';
+  let comment = req.body.comment;
 
   Object.keys(req.body).forEach((key) => {
     //console.log(key);
