@@ -11,15 +11,25 @@ html
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css")
     script(src="https://cdn.jsdelivr.net/npm/sortablejs@1.13.0/Sortable.min.js")
     script(src='/js/client.js')
+
+    style
+      | body {
+      |   background-image: url('/images/trump-black-and-white-clipart.webp');
+      |   background-size: 100% auto;
+      |   background-repeat: no-repeat;
+      |   background-attachment: fixed;
+      |   background-position: center bottom;
+      | }
     
   body(class='p-2')
 
-    main(class='container-full-width' style='max-width: 720px')
-        div(class='d-flex align-items-center p-3 my-1 bg-azure-light-gray rounded shadow-sm')
-            img(class='me-3', src='/images/htph.jpg', alt='', width='48', height='48')
-            div(class='1h-1')
-                h1(class='h1 mb-0 text-azure-blue lh-1') Elo Boys (early access)
-                small(class='text-black') Lose your friends with the help of this WebApp
+    main(class='container-full-width' )
+        .container
+          .row
+            .col-md-12.text-center
+              h1 <b>Elo Boys</b> 
+            .col-md-12.text-center
+              h2 (early access)
 
 
         block content

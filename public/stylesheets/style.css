@@ -6,15 +6,27 @@ head {
 body {
   padding: 50px;
   font: 24px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-color: #dbf2ff;
+  background-color: #ffffff;
+}
+
+h1 {
+  color: rgb(255, 255, 255); /* Set the font color */
+  font-size: 50px;
+  font-weight: bold;
+  -webkit-text-stroke-width: 2px; /* Width of the outline */
+  -webkit-text-stroke-color: rgb(0, 0, 0); /* Color of the outline */
+}
+
+h2 {
+  color: rgb(255, 255, 255); /* Set the font color */
+  font-size: 40px;
+  font-weight: bold;
+  -webkit-text-stroke-width: 2px; /* Width of the outline */
+  -webkit-text-stroke-color: rgb(0, 0, 0); /* Color of the outline */
 }
 
 a {
   color: #00B7FF;
-}
-
-.text-azure-blue {
-  color: #0078D4
 }
 
 .bg-azure-light-gray {
@@ -59,4 +71,9 @@ a {
 
 .drag-me {
   
+}
+
+.container-full-width {
+  margin-left: 5%;
+  max-width: 90%;
 }
