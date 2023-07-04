@@ -130,7 +130,7 @@ async function addRows()
 
         /* select col */
         var col1 = document.createElement('div');
-        col1.className = 'col-sm-3';
+        col1.className = 'col-sm-5';
         /* select */
         var select = document.createElement('select');
         select.id = `playerDropdown${i}`;
@@ -170,11 +170,12 @@ async function addRows()
 
         /* new elo */
         var col4 = document.createElement('input');
-        col4.className = 'col-sm-5';
+        col4.className = 'col-sm-3';
         col4.id = `player${i}Change`;
         col4.name = `playerChange${i}`;
         col4.value = '0'
         col4.readOnly = true;
+        col4.style.outline = 'none'
         // var inputElo = document.createElement('div');
         // inputElo.name = `playerChange${i}`;
         // inputElo.id = `player${i}Changes`;

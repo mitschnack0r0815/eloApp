@@ -7,7 +7,7 @@ block do_game
         <div class="input-group-text col-sm-4"><b>Set player count</b></div>
         input#playerCount( type="number" name="playerCount" min="2" max="10" value='2' class='col-sm-2 centered-input')
         // Button trigger modal
-        button.btn.btn-dark(type='button' data-bs-toggle='modal' data-bs-target='#exampleModal' onclick="addRows()" class='col-sm-6')
+        button.btn.btn-haptic(type='button' data-bs-toggle='modal' data-bs-target='#exampleModal' onclick="addRows()" class='col-sm-6')
             | <b> Create Elo Game </b>
       </div>
       
@@ -27,7 +27,7 @@ block do_game
                     br
                     div(class='row mb-3 border-bottom border-3')
                       div(class='col-md-1 fw-bold') #
-                      div(class='col-md-3 fw-bold') Player
+                      div(class='col-md-5 fw-bold') Player
                       div(class='col-md-2 fw-bold') Elo
                       div(class='col-md-2 fw-bold') Change
                       br
@@ -38,11 +38,12 @@ block do_game
                       hr
                       div(class='row mb-2 justify-content-center')
                         div(class='col-sm-1')
-                        input(class='col-sm-5' name='comment' type='text' placeholder='Comment here...')
+                        input(class='col-sm-4' name='comment' type='text' placeholder='Comment...')
                         div(class='col-sm-2')
-                          button.btn.btn-dark(type='button' data-bs-dismiss='modal' onclick="reloadPage()") Close
+                          button.btn.btn-haptic(type='button' data-bs-dismiss='modal' onclick="reloadPage()") Close
                         div(class='col-sm-4')
-                          button.btn.btn-dark(type='submit') Save game
+                          button.btn.btn-haptic(type='submit') Save game
+                        div(class='col-sm-1')
 
                   .modal-footer
 
@@ -91,7 +92,7 @@ block elo_table
               div(class='col-sm-9')
                 input(class="form-control form-control-sm addGame" type="text" name='playerName', placeholder="Enter player name here..." )
               div(class='col-sm-3 addGame')
-                button(class='btn btn-dark btn-sm' type='submit') Add player
+                button(class='btn btn-haptic btn-sm' type='submit') Add player
 
 block games_table
 

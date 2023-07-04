@@ -77,3 +77,20 @@ a {
   margin-left: 5%;
   max-width: 90%;
 }
+
+.btn-haptic {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.btn-haptic:hover {
+  transform: translateY(-2px);
+}
+
+.btn-haptic:active {
+  transform: translateY(1px);
+}
