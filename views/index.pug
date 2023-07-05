@@ -134,10 +134,10 @@ block games_table
             div(class='col-sm-10')    
               div.comment-box 
                 | <b>Comment:</b> <br> #{game.comment}
-            div(class='col-sm-2')
-              button(id='submitGameDel' class='btn btn-haptic') Remove
+            div(class='col-sm-2 d-flex flex-column align-items-end')
+              button(id='submitGameDel' class='btn btn-haptic' style='margin-top: 15%;') Remove
           else 
-            div(class='col-sm-12')    
+            div(class='col-sm-12')   
               div.comment-box 
                 | <b>Comment:</b> <br> #{game.comment}
     br
