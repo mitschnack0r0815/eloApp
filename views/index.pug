@@ -116,8 +116,9 @@ block games_table
                     th Elo
                 tbody
                   each player, i in game.player
-                    div(id=`remPlayerName${i}` hidden) #{player}
-                    div(id=`remPlayerElo${i}` hidden) #{Number(game.newElo[i]) - Number(game.elo[i])}
+                    if index === 0
+                      div(id=`remPlayerName${i}` hidden) #{player}
+                      div(id=`remPlayerElo${i}` hidden) #{Number(game.newElo[i]) - Number(game.elo[i])}
                     tr
                       td ##{i +1}
                       td #{player}

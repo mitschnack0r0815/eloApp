@@ -148,7 +148,8 @@ router.post('/gameDel', async (req, res) => {
   const { playerArr } = req.body;
   const { playerEloArr } = req.body;
 
-  console.log(gameID);
+  console.log(playerArr);
+  console.log(playerEloArr);
 
   for (let index = 0; index < playerArr.length; index++) {
     await Player.findOneAndUpdate(
