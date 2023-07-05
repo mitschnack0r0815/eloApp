@@ -5,6 +5,22 @@ var Game = require('../models/game');
 
 var router = express.Router();
 
+function getDateID()
+{
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+
+  const formattedDate = `${year}${month}${day}${hours}${minutes}${seconds}`;
+  console.log(formattedDate); // Output: 20220510123615
+  return formattedDate;
+}
+
 /* GET home page. */
 router.get('/', async (req, res) => {
   try {
@@ -75,7 +91,7 @@ router.post('/addPlayer', async (req, res) => {
 });
 
 router.post('/addGame', async (req, res) => {
-  const createDate = Date.now();
+  const createDate = getDateID();
   let playerNames = [];
   let playerElos = [];
   let playerElosUpdated = [];
@@ -85,17 +101,11 @@ router.post('/addGame', async (req, res) => {
     //console.log(key);
     if (key.startsWith('playerDropdown')) {
       var value = req.body[key];
-      // Perform operations with the value
-      console.log('Key: ' + key + ' Value: ' + value);
-
       playerNames.push(value);
     }
 
     if (key.startsWith('playerChange')) {
       var value = req.body[key];
-      // Perform operations with the value
-      console.log('Key: ' + key + ' Value: ' + value);
-
       playerElos.push(value);
     }
   });
@@ -120,20 +130,6 @@ router.post('/addGame', async (req, res) => {
   }
   console.log(playerNames + ' - ' + playerElos + ' - ' + playerElosUpdated);
 
-  // try {
-
-  //   await Player.findOneAndUpdate(
-  //     { playerName: player1 },
-  //     { elo: p1Elo },
-  //     { new: true } // Return the updated document
-  //   );
-
-  //   await Player.findOneAndUpdate(
-  //     { playerName: player2 },
-  //     { elo: p2Elo },
-  //     { new: true } // Return the updated document
-  //   );
-
   var game = new Game({
     createDate: createDate,
     player:  playerNames,
@@ -145,10 +141,33 @@ router.post('/addGame', async (req, res) => {
   game.save();
   res.redirect('/');
 
-  // } catch (err) {
-  //   console.log(err);
-  //   res.send('Sorry! Something went wrong.');
-  // }
+});
+
+router.post('/gameDel', async (req, res) => {
+  const { gameID } = req.body;
+  const { playerArr } = req.body;
+  const { playerEloArr } = req.body;
+
+  console.log(gameID);
+
+  for (let index = 0; index < playerArr.length; index++) {
+    await Player.findOneAndUpdate(
+      { playerName: playerArr[index] },
+      { elo: playerEloArr[index] },
+      { new: true }
+    ).catch(error => {
+      console.error('Error:', error);
+    });
+  }
+
+  await Game.findOneAndDelete(
+    { createDate: gameID }
+  ).catch(error => {
+    console.error('Error:', error);
+    res.redirect('/');
+  });
+
+  res.redirect('/');
 });
 
 //---------------------------------------------------------------------

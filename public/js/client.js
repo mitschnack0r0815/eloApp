@@ -1,6 +1,11 @@
 let nPlayerCount = 0;
 let avaiablePlayer;
 
+function reloadPage() 
+{
+    location.reload();
+}
+
 //-----------------Elo calc-------------------------
 
 // Calculate Elo changes based on placings
@@ -72,28 +77,6 @@ function calculateElo(playerA, playerB, result) {
 function gameSetup()
 {
     document.addEventListener('DOMContentLoaded', () => {
-        /* Player win radio boxes */
-        const checkPlayerWinBoxes = document.querySelectorAll('input[name="checkPlayerWin"]');
-
-        checkPlayerWinBoxes.forEach((radio) => {
-            radio.addEventListener('change', (event) => {
-                const playerName = document.getElementById('playerDropdown' + event.target.value).value;
-                console.log(playerName);
-
-                const player1Rating = Number(document.getElementById('playerDropdown1Elo').innerText);
-                const player2Rating = Number(document.getElementById('playerDropdown2Elo').innerText);
-                /* had to switch 1 and 0 logic */
-                const result = (Number(event.target.value) - 1) == 0 ? 1 : 0; // Result can be 0 (loss), 0.5 (draw), or 1 (win)
-
-                const [newRating1, newRating2] = calculateElo(player1Rating, player2Rating, result);
-
-                document.getElementById('player1Change').value = Math.round(newRating1);
-                document.getElementById('player2Change').value = Math.round(newRating2);
-
-                console.log(`Player A's new rating: ${newRating1}`);
-                console.log(`Player B's new rating: ${newRating2}`);
-            });
-        });
 
         const playerCount = document.getElementById('playerCount');
         playerCount.addEventListener('input', () => {
@@ -108,6 +91,43 @@ function gameSetup()
                 nPlayerCount = inputValue;
             }
         });
+
+        const submitGameDel = document.getElementById('submitGameDel');
+        const gameID = document.getElementById('gameID');
+        if (submitGameDel && gameID)
+        {
+            submitGameDel.addEventListener('click', () => {
+                const text = gameID.innerText;
+                const data = { 
+                    gameID : text,
+                    playerArr : [],
+                    playerEloArr : [] 
+                };
+
+                const players = document.querySelectorAll('[id^="remPlayerName"]');
+                const playersElo = document.querySelectorAll('[id^="remPlayerElo"]');
+                for (let index = 0; index < players.length; index++) {
+                    data.playerArr.push(players[index].innerHTML);
+                    data.playerEloArr.push(playersElo[index].innerHTML);
+                }
+
+                console.log(data);
+
+                fetch('/gameDel', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(result => {
+                    reloadPage();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        }
     });
 }
 
@@ -126,15 +146,17 @@ async function addRows()
         formPlayer.setAttribute('data-id', i );
 
         var row = document.createElement('div');
-        row.className = 'row mb-2';
+        row.className = 'row mb-2 playerGameRow';
 
         /* select col */
         var col1 = document.createElement('div');
         col1.className = 'col-sm-5';
         /* select */
         var select = document.createElement('select');
+        select.className = 'playerSelect';
         select.id = `playerDropdown${i}`;
         select.name = `playerDropdown${i}`;
+        select.style.maxWidth = '250px';
         col1.appendChild(select);
         /* option */
         var option = document.createElement('option');
@@ -170,12 +192,11 @@ async function addRows()
 
         /* new elo */
         var col4 = document.createElement('input');
-        col4.className = 'col-sm-3';
+        col4.className = 'col-sm-3 eloInput';
         col4.id = `player${i}Change`;
         col4.name = `playerChange${i}`;
         col4.value = '0'
         col4.readOnly = true;
-        col4.style.outline = 'none'
         // var inputElo = document.createElement('div');
         // inputElo.name = `playerChange${i}`;
         // inputElo.id = `player${i}Changes`;
@@ -185,16 +206,27 @@ async function addRows()
         // inputElo.placeholder = '0';
         // col4.appendChild(inputElo);
 
+        var col5 = document.createElement('div');
+        col5.className = 'col-sm-1';
+        col5.style.maxHeight = '50px';
+        col5.innerHTML = `
+        <svg class="svg-icon">
+            <use xlink:href="#dragSVG"></use>
+        </svg>`;
+
         playerCountContainer.appendChild(formPlayer);
         formPlayer.appendChild(row);
         row.appendChild(col3);
         row.appendChild(col1);
         row.appendChild(col2);
         row.appendChild(col4);
+        row.appendChild(col5);
     }
 
     /* Player dropdown */
     const playerDropdown = document.querySelectorAll('select[name^="playerDropdown"]');
+
+    let freeDrag = false;
 
     playerDropdown.forEach((dropdown) => {
         dropdown.addEventListener('change', (event) => {
@@ -203,54 +235,69 @@ async function addRows()
             playerEloDiv.innerHTML = playerElo.innerText;
 
             console.log(dropdown.id + 'Elo' + ' - ' + dropdown.value + ' - ' + playerElo.innerText);
+
+            let countChoosen = 0;
+            playerDropdown.forEach((dropdown) => {
+                if (dropdown.value != '-')
+                {
+                    countChoosen++;
+                }
+            });
+            if (countChoosen === playerDropdown.length)
+            {
+                freeDrag = true;
+            }
         });
     });
 
     let sortedList = Sortable.create(document.getElementById('playerCount-container'), {
         animation: 150,
         onEnd: function (evt) {
-            // Callback when a row is dropped in a new position
-            console.log('Moved row:', evt.item.textContent);
+            if (freeDrag)
+            {
+                // Callback when a row is dropped in a new position
+                console.log('Moved row:', evt.item.textContent);
 
-            var ratingsPlaced = [];
-            var sortedPlaceList = [];
-            var listOrder = sortedList.toArray(function (item) {
-                return item.getAttribute('data-id');
-            });
-            //console.log(listOrder);
+                var ratingsPlaced = [];
+                var sortedPlaceList = [];
+                var listOrder = sortedList.toArray(function (item) {
+                    return item.getAttribute('data-id');
+                });
+                //console.log(listOrder);
 
-            listOrder.forEach((place, index) => {
-                let playerName = document.getElementById('playerDropdown' + place).value;
-                let playerElo = document.getElementById('playerDropdown' + place + 'Elo').innerText;
-                //console.log(`Index: ${index}, Player: ${playerName}, Elo: ${playerElo}`);
+                listOrder.forEach((place, index) => {
+                    let playerName = document.getElementById('playerDropdown' + place).value;
+                    let playerElo = document.getElementById('playerDropdown' + place + 'Elo').innerText;
+                    //console.log(`Index: ${index}, Player: ${playerName}, Elo: ${playerElo}`);
 
-                sortedPlaceList.push(index + 1);
-                ratingsPlaced.push(playerElo);
-            });
+                    sortedPlaceList.push(index + 1);
+                    ratingsPlaced.push(playerElo);
+                });
 
-            const eloChanges = calculateEloChanges(sortedPlaceList, ratingsPlaced);
-            //console.log(eloChanges + ' - ' + listOrder);
+                const eloChanges = calculateEloChanges(sortedPlaceList, ratingsPlaced);
+                //console.log(eloChanges + ' - ' + listOrder);
 
-            let eloInput = document.getElementById(`eloInput`);
-            eloInput.value = 'x';
+                let eloInput = document.getElementById(`eloInput`);
+                eloInput.value = 'x';
 
-            for (var i = 0; i < listOrder.length; i++) {    
-                console.log(`player${listOrder[i]} gets ${eloChanges[i]}`);            
-                let newElo = document.getElementById(`player${listOrder[i]}Change`);
-                newElo.value = eloChanges[i];
+                for (var i = 0; i < listOrder.length; i++) {    
+                    console.log(`player${listOrder[i]} gets ${eloChanges[i]}`);            
+                    let newElo = document.getElementById(`player${listOrder[i]}Change`);
+                    newElo.value = eloChanges[i];
 
-                let newRank = document.getElementById(`player${listOrder[i]}Rank`);
-                newRank.innerText = i +1;
+                    let newRank = document.getElementById(`player${listOrder[i]}Rank`);
+                    newRank.innerText = i +1;
 
-                //let eloInput = document.getElementById(`eloInput`);
-                eloInput.value = eloInput.value + ';' + eloChanges[i];
+                    //let eloInput = document.getElementById(`eloInput`);
+                    eloInput.value = eloInput.value + ';' + eloChanges[i];
+                }
+
+                const gameSubmit = document.getElementById("gameSubmit");
+                gameSubmit.disabled = false;
             }
         }
     });
 }
 
-function reloadPage() 
-{
-    location.reload();
-}
+
 

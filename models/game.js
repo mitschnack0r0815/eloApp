@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const gameSchema = new mongoose.Schema({
-  createDate: Date,
+  createDate: String,
   player:  Array,
   elo:    Array,
   newElo: Array,

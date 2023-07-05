@@ -12,7 +12,7 @@ block do_game
       </div>
       
       // Modal
-      #exampleModal.modal.fade(tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true')
+      #exampleModal.modal.fade(tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true' style='min-width="950px";')
           .modal-dialog.modal-fullscreen
               .modal-content.modal-size
                   .modal-header
@@ -26,10 +26,10 @@ block do_game
                     p 4. Save the game.
                     br
                     div(class='row mb-3 border-bottom border-3')
-                      div(class='col-md-1 fw-bold') #
-                      div(class='col-md-5 fw-bold') Player
+                      div(class='col-md-2 fw-bold') &nbsp;#
+                      div(class='col-md-4 fw-bold') Player
                       div(class='col-md-2 fw-bold') Elo
-                      div(class='col-md-2 fw-bold') Change
+                      div(class='col-md-2 fw-bold') &nbsp;&nbsp;Change
                       br
                     form(id='gameForm' action="/addGame" method="POST" class='form-registration')
                       div(id='playerRows' class='row mb-0')
@@ -42,7 +42,7 @@ block do_game
                         div(class='col-sm-2')
                           button.btn.btn-haptic(type='button' data-bs-dismiss='modal' onclick="reloadPage()") Close
                         div(class='col-sm-4')
-                          button.btn.btn-haptic(type='submit') Save game
+                          button.btn.btn-haptic(id='gameSubmit' type='submit' disabled) Save game
                         div(class='col-sm-1')
 
                   .modal-footer
@@ -101,7 +101,7 @@ block games_table
 
   h2(class='my-2') <b>Games</b>
 
-  each game in playedGames.reverse()
+  each game, index in playedGames.reverse()
     div.card
       div.card-body
         div(class='row mb-2')
@@ -116,6 +116,8 @@ block games_table
                     th Elo
                 tbody
                   each player, i in game.player
+                    div(id=`remPlayerName${i}` hidden) #{player}
+                    div(id=`remPlayerElo${i}` hidden) #{Number(game.newElo[i]) - Number(game.elo[i])}
                     tr
                       td ##{i +1}
                       td #{player}
@@ -125,7 +127,16 @@ block games_table
                           - const elo = Number(game.elo[i])
                           div(class=(elo >= 0) ? 'green col-sm-4' : 'red col-sm-4') 
                             | (#{elo})
-          div(class='col-sm-12')    
-            div.comment-box 
-              | <b>Comment:</b> <br> #{game.comment}
+          
+          if index === 0
+            div(id='gameID' hidden) #{game.createDate}
+            div(class='col-sm-10')    
+              div.comment-box 
+                | <b>Comment:</b> <br> #{game.comment}
+            div(class='col-sm-2')
+              button(id='submitGameDel' class='btn btn-haptic') Remove
+          else 
+            div(class='col-sm-12')    
+              div.comment-box 
+                | <b>Comment:</b> <br> #{game.comment}
     br
